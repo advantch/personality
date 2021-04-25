@@ -46,8 +46,9 @@ export default class Personality {
    * @param {PersonalityConfig} config - Tool's config
    * @param {API} api - Editor.js API
    */
-  constructor({ data, config, api }) {
+  constructor({ data, config, api, readonly }) {
     this.api = api;
+    this.readonly = readonly;
 
     this.nodes = {
       wrapper: null,
@@ -147,7 +148,17 @@ export default class Personality {
       style: 'error'
     });
   }
-
+  
+  /**
+   * Returns true to notify core that read-only is supported
+   *
+   * @returns {boolean}
+   */
+  static get isReadOnlySupported() {
+    return true;
+  }
+  
+  
   /**
    * Tool's CSS classes
    */
@@ -197,20 +208,22 @@ export default class Personality {
    * @return {HTMLDivElement}
    */
   render() {
+    const contentEditable = this.readOnly ? 'false' : 'true';
+
     const { name, description, photo, link } = this.data;
 
     this.nodes.wrapper = this.make('div', this.CSS.wrapper);
 
     this.nodes.name = this.make('div', this.CSS.name, {
-      contentEditable: true
+      contentEditable: contentEditable;
     });
 
     this.nodes.description = this.make('div', this.CSS.description, {
-      contentEditable: true
+      contentEditable: contentEditable;
     });
 
     this.nodes.link = this.make('div', this.CSS.link, {
-      contentEditable: true
+      contentEditable: contentEditable;
     });
 
     this.nodes.photo = this.make('div', this.CSS.photo);
